@@ -1,25 +1,40 @@
 #Base R, Principios Basicos.
 
-install.packages(c("ggvis", "tm", "dplyr", "plyr", "sqldf", 'rbenchmark', 'tidyr', "ggplot2"))
-library(ggvis)
+install.packages(c("ggvis", "tm", "dplyr", "plyr", "sqldf", 'rbenchmark', 'tidyr',
+                   "ggplot2", "utf8", "RSiteSearch"))
+library(ggvis)   #pacote de visualização de dados para R
 library(tm)
-library(dplyr)
-library(plyr)
-require(sqldf)
-library(rbenchmark)
+library(dplyr)   #fornece um conjunto de ferramentas para manipulação eficiente de conjuntos de dados em R.
+library(plyr)    #é um conjunto de ferramentas para ajustar um conjunto comum de problemas.
+require(sqldf)   #pacote de banco de dados
+library(rbenchmark) #uma rotina simples para comparar o código R
 library(tidyr)
-library(ggplot2)
+library(ggplot2) #graficos
+library(RSiteSearch) #pesquise palavras-chave ou frases em páginas de ajuda
+library(utf8)
+require() #a diferença e que chama na função
+
+# Importando arquivos
+# read.xls() - Excel
+# read.mtp() - Minitab
+# read.spss() - SPSS
+# read.table() - Arquivos txt
+# read.csv() - Arquivos csv
+# read.delim() - Leitura de arquivos delimitados
 
 # Funções Built-in
-abs(-43)
-sum(c(1:5))  #soma
-mean(c(1:5)) #media
-round(c(1.1:5.8)) #arredondar
-rev(c(1:5)) #inverte
-seq(1:5)
-sort(rev(c(1:5))) #ordena
-append(c(1:5), 6) #adciona
-
+abs(-43)           #calcula valor absoluto
+sum(c(1:5))        #soma
+mean(c(1:5))       #media
+round(c(1.1:5.8))  #arredondar
+rev(c(1:5))        #inverte
+seq(1:10)          #sequencia
+sort(rev(c(1:5)))  #ordena
+append(c(1:5), 6)  #adciona
+getwd()            #Mostrar o diretório de trabalho atual
+dir()              #Listar os arquivos do diretório
+setwd()            #Mudar o diretório de trabalho
+opts_knit$set(root.dir = '../')
 
 #Criando um vetor
 vetor1 <- c(8,10,5,19,3,33,14,41,47,35,22,13)
@@ -42,6 +57,31 @@ round(mean(unlist(lista2)))
 class(lista2)
 class(vetor2)
 
+### Manipulação basica de objeto ###
+# Informações sobre o dataframe
+str(tabela1)
+dim(tabela1)
+length(tabela1)
+# Obtendo um vetor de um dataframe
+pesq$pais
+pesq$nome
+# Extraindo um único valor
+pesq[1,1]
+pesq[3,2]
+# Número de Linhas e Colunas
+nrow(pesq)
+ncol(pesq)
+# Primeiros elementos do dataframe
+head(pesq)
+head(mtcars)
+# Últimos elementos do dataframe
+tail(pesq)
+tail(mtcars)
+#Resumo do objeto, ou de uma parte especifica
+summary(mtcars)
+summary(mtcars$cyl)
+# Combinando dataframes
+df3 <- merge(pesq, df2)
 #Criando um D.Frame com arquivos importados
 tabela1 <- data.frame(read.csv(file = "http://data.princeton.edu/wws509/datasets/effort.dat", header = TRUE, sep = ","))
 ##Analisando um D.Frame
@@ -58,13 +98,13 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 subset(iris, Sepal.Length > 7)
 ##opiando o D.Frame e criando um subset com os 15 primeiros registros e depois 15 linhas no meio
 iris2 <- iris
-iris1a15 <- subset(iris2[1:15,])
+iris1a15 <- subset(iris[1:15,])
 iris1a15.2 <- subset(iris2[8:23,])
 #Usando o filtro
 RSiteSearch("filter")
 filter(iris2, Sepal.Length >	6)
 
-## uma forma mais pratica de fazer loops, apply family
+## uma forma mais pratica de fazer loops e com apply family
 
 # apply()  - arrays e matrizes
 # tapply() - os vetores podem ser divididos em diferentes subsets
@@ -122,7 +162,7 @@ mediaEscola <- data.frame(
   Nota2 = c(10,7,8,9,2,5,8,4,3,10),
   Nota3 = c(6,7,4,9,5,7,6,8,6,7),
   Nota4 = c(6,7,4,9,7,8,1,6,4,5)
-  )
+)
 #adicionando coluna
 mediaEscola$Media = NA
 mediaEscola$Media = apply(mediaEscola[, c(2, 3, 4,5)], 1, mean)
@@ -173,7 +213,69 @@ lista2
 rapply(lista2, sum)
 rapply(lista2, sum, how = "vetor")
 
-#base exercicio2
+
+
+### Exercicios ###
+
+### Exercicio 01 - Comandos Basicos ###
+
+#	Exercício	1	- Crie	um	vetor	com	12	números	inteiros
+vetor1 <- c(45:56)
+vetor1 <- round(runif(10, 1, 12))
+vetor1 <- c(8,10,5,19,3,33,14,41,47,35,22,13)
+
+#	Exercício	2	- Crie	uma	matriz	com	4	linhas	e	4	colunas	preenchida	com	números	inteiros
+matriz1 <- matrix(1:16,nrow = 4,ncol = 4, byrow = T)
+
+#	Exercício	3	- Crie	uma	lista	unindo	o	vetor	e	matriz	criados	anteriormente
+lista1 <- list(vetor1,matriz1)
+
+#	Exercício	4	- Usando	a	função	read.table()	leia	o	arquivo	do	link	abaixo	para	uma	dataframe
+#	http://data.princeton.edu/wws509/datasets/effort.dat
+tabela1 <- data.frame(read.table(file = "http://data.princeton.edu/wws509/datasets/effort.dat"))
+class(tabela1)
+tabela1
+
+#	Exercício	5	- Transforme	o	dataframe	anterior,	em	um	dataframe	nomeado	com	os	seguintes	
+#labels:
+#	c("config",	"esfc",	"chang")
+names(tabela1) = c("config",	"esfc",	"chang")
+tabela1
+
+#	Exercício	6	- Imprima	na	tela	o	dataframe	iris,	verifique	quantas	dimensões	existem	no
+iris
+class(iris)
+dim(iris)
+summary(iris)
+str(iris)
+
+#	Exercício	7	- Crie	um	plot	simples	usando	as	duas	primeiras	colunas	do	dataframe	iris
+plot(iris$Sepal.Length, iris$Petal.Width)
+
+#	Exercício	8	- Usando	s	função	subset,	crie	um	novo	dataframe	com	o	conjunto	de	dados	do	
+#dataframe	iris	em	que	Sepal.Length >	7
+#	Dica:	consulte	o	help	para	aprender	como	usar	a	função	subset()
+subset(iris, Sepal.Length > 7)
+
+#	Exercícios	9	- Crie	um	dataframe	que	seja	cópia	do	dataframe	iris	e	usando	a	função	slice(),	
+#divida	o	dataframe	em	um	subset	de 15	linhas
+#	Dica	1:	você	vai	ter	que	instalar	e	carregar	o	pacote	dplyr
+#	Dica	2:	consulte	o	help	para	aprender	como	usar	a	função	slice()
+install.packages("dplyr")
+library(dplyr)
+iris2 <- iris
+iris1a15 <- subset(iris2[1:15,])
+iris1a15.1 <- slice(iris2, 1:15)
+
+#	Exercícios	10 - Use	a	função	filter	no	seu	novo	dataframe	criado	no	item	anterior	e	retorne	
+#apenas	valores	em	que	Sepal.Length	>	6
+#	Dica:	use	o	RSiteSearch() para	aprender	como	usar	a	função	filte
+RSiteSearch("filter")
+filter(iris2, Sepal.Length >	6)
+
+
+### Exercicio 02 - Principais Manipulações ###
+
 #	Exercício	1	- Crie	uma	função	que	receba vetores	como	parâmetro,
 # converta-os	em	um d.frame	e	imprima
 funcao1 <- function(){
@@ -183,27 +285,45 @@ funcao1 <- function(){
   df1.0
 }
 funcao1()
+
+vetor1.3 <- c("João","Rui","Ivo","Carlos")
+vetor1.4 <- c(20, 36, 45, 76)
+funcao1.1 <- function(nome, idade){
+  funcao1.1 = data.frame(cbind(nome, idade))
+  print(funcao1.1)
+}
+funcao1.1(vetor1.3, vetor1.4)
+
 #	Exercício	2	- Crie	uma	matriz	com	4	linhas	e	4	colunas	preenchida	com	números	inteiros
 #e calcule	a	media	de	cada	linha
-matriz1
+matriz1 <- matrix(1:16, nrow = 4, ncol = 4, byrow = T)
+matriz2 <- matrix(c(1:16), nrow = 4, ncol = 4,  byrow = T)
 mean(matriz1[1,])
 mean(matriz1[2,])
 mean(matriz1[3,])
 mean(matriz1[4,])
+
+apply(matriz1, 1, mean)
+
 #	Exercício	3	- Considere	o	dataframe	abaixo.	Calcule	a	media	por	disciplina
 escola	<- data.frame(
   Aluno	=	c('Alan',	'Alice',	'Alana',	'Aline',	'Alex',	'Ajay'),
   Matemática	=	c(90,	80,	85,	87,	56,	79),
   Geografia	=	c(100,	78,	86,	90,	98,	67),
   Química	=	c(76,	56,	89,	90,	100,	87)
-  )
+)
 mean(escola$Matemática)
 mean(escola$Geografia)
 mean(escola$Química)
+
+apply(escola[, c(2, 3, 4)], 2, mean)
+
 #	Exercício	4	- Cria	uma	lista	com	3	elementos,	todos	numéricos	e	calcule	a	soma	de	todos	os	
 #elementos	da	lista
 elist1 <- list(c(4,9,6))
 sum(elist1[[1]])
+
+do.call(sum, elist1)
 
 #	Exercício	5	- Transforme	a	lista	anterior	um	vetor
 unelist1 <- unlist(elist1)
@@ -216,11 +336,15 @@ str	<- c("Expressoes",	"regulares",	"em	linguagem	R",
          "podemos	buscar	padroes	em	digitos",
          "como	por	exemplo",
          "10992451280")
-str[5] <- "e	exploracao	de	frases"
+?status(str)
+sub("textos", "frases", str)
+gsub("textos", "frases", str)
 
 #	Exercício 7	- Usando	o	dataset	mtcars,	crie	um	gráfico com	ggplot	do	tipo	scatter	plot.	Use	as	
 #colunas	disp	e	mpg	nos	eixos	x	e	y	respectivamente
 mtcars
+ggplot(data = mtcars, aes(x = disp, y = mpg)) + geom_point()
+
 ggplot(mtcars, aes(x=disp, y=mpg)) + 
   geom_point(
     color="blue",
